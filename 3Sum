@@ -33,7 +33,7 @@ Constraints:
 3 <= nums.length <= 3000
 -105 <= nums[i] <= 105
 
-Solution:
+Solution: -> using set
 
 class Solution(object):
     
@@ -64,5 +64,43 @@ class Solution(object):
                 else:
                     r-=1
         return res
+        
+Solution 2 -> without set
+
+class Solution(object):
+    
+    def threeSum(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        arr = []
+        nums.sort()
+        n = len(nums)
+        res = []
+        s = set()
+        for i in range(0, n-1):
+            # # print("here before", )
+            if(i > 0 and nums[i] == nums[i-1]):
+            # #     # print("here")
+                continue
+            # # print("here after")
+            l = i + 1
+            r = n - 1
+            tf = - nums[i]
+            while(l < r):
+                x = nums[l] + nums[r]
+                if x == - nums[i]:
+                    res.append([nums[i], nums[l], nums[r]])
+                    l+=1
+                    while(l < r and nums[l] == nums[l-1]):
+                        l+=1
+                elif x < - nums[i]:
+                    l+=1
+                else:
+                    r-=1
+        return res
+                
+    
                 
     
