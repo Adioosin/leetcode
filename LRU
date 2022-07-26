@@ -1,0 +1,85 @@
+LRU with linear time insertion & retrival
+
+
+Solution:
+
+public class Node{
+    int key;
+    int value;
+    Node prev;
+    Node next;
+    public Node(int key, int value) {
+        this.key = key;
+        this.value = value;
+    }
+}
+
+class LRUCache {
+    
+    private HashMap<Integer, Node> cache;
+    private int capacity, count;
+    private Node head, tail;
+
+    public LRUCache(int capacity) {
+        cache = new HashMap<>();
+        this.capacity = capacity;
+        head = new Node(0,0);
+        tail = new Node(0,0);
+        head.next = tail;
+        tail.prev = head;
+        tail.next = null;
+        head.prev = null;
+        count = 0;
+    }
+    
+    public int get(int key) {
+        if (cache.get(key) == null) {
+            return -1;
+        }
+        else {
+            Node curr = cache.get(key);
+            int val = curr.value;
+            deleteNode(curr);
+            addToTop(curr);
+            return val;
+        }
+    }
+    
+    public void put(int key, int value) {
+        if (cache.get(key) != null) {
+            Node curr = cache.get(key);
+            curr.value = value;
+            deleteNode(curr);
+            addToTop(curr);
+        } else {
+            Node node = new Node(key, value);
+            cache.put(key, node);
+            if (count < capacity) {
+                count++;
+            } else{
+                cache.remove(tail.prev.key);
+                deleteNode(tail.prev);
+            }
+            addToTop(node);
+        }
+    }
+    
+    private void deleteNode(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+    
+    private void addToTop(Node newNode) {
+        newNode.next = head.next;
+        newNode.next.prev = newNode;
+        newNode.prev = head;
+        head.next = newNode;
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
